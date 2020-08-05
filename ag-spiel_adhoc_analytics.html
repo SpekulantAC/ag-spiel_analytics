@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>AG-Spiel Ad-hoc Analytics</h2>
+
+<p id="info">aktualisiere...</p>
+<p id="count_ags"></p>
+<p id="count_orders"></p>
+<p id="count_volumen"></p>
+
+<script>
+    var xmlhttp = new XMLHttpRequest();
+    
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        data = JSON.parse(this.responseText);
+        document.getElementById("info").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
+        document.getElementById("count_ags").innerHTML = "Registrierte AGs: " + data.allgemein.ags;
+        document.getElementById("count_orders").innerHTML = "Orders letzte 24h:" + data.allgemein["24_stunden_orders"];
+        document.getElementById("count_volumen").innerHTML = "Ordervolumen letzte 24h:" + data.allgemein["24_stunden_ordervolumen"];
+        
+      }
+    };
+    // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
+    xmlhttp.open("GET", "https://cors-anywhere.herokuapp.com/https://www.ag-spiel.de/api/get/data.php", true);
+    xmlhttp.send();
+    </script>
+
+</html>
