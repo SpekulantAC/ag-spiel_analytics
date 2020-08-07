@@ -8,6 +8,12 @@
 <p id="count_ags"></p>
 <p id="count_orders"></p>
 <p id="count_volumen"></p>
+<p id="summe_bargeld"></p>
+<p id="summe_anleihen"></p>
+<p id="summe_zinsertrag"></p>
+<p id="summe_kredite"></p>
+<p id="summe_zinsaufwand"></p>
+<p id="summe_marktkapitalisierung"></p>
 
 <script>
     var xmlhttp = new XMLHttpRequest();
@@ -18,8 +24,62 @@
         document.getElementById("info").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
         document.getElementById("count_ags").innerHTML = "Registrierte AGs: " + data.allgemein.ags;
         document.getElementById("count_orders").innerHTML = "Orders letzte 24h:" + data.allgemein["24_stunden_orders"];
-        document.getElementById("count_volumen").innerHTML = "Ordervolumen letzte 24h:" + data.allgemein["24_stunden_ordervolumen"];
-        
+        document.getElementById("count_volumen").innerHTML = "Ordervolumen letzte 24h:" + data.allgemein["24_stunden_ordervolumen"].toLocaleString('de');
+        var bargeld = 0;
+        var marktkapitalisierung = 0;
+        var anleihen = 0;
+        var erw_zinsertrag = 0;
+        var kredite = 0;
+        var erw_zinsaufwand = 0;
+        var ag;
+        var bond;
+        var loan;
+        for (ag in data.ags){
+          console.log("wkn "+ag)
+          marktkapitalisierung += data['ags'][ag]['aktienanzahl']*data['ags'][ag]['kurs']
+          console.log(marktkapitalisierung)
+          bargeld += data['ags'][ag]['bargeld']
+          console.log(bargeld)
+          console.log(data['ags'][ag]['anleihen'])
+
+          for (bond in data['ags'][ag]['anleihen']){
+            //console.log([bond,isNaN(data['ags'][ag]['anleihen'][bond]['betrag']),isNaN(data['ags'][ag]['anleihen'][bond]['zins']),isNaN(data['ags'][ag]['anleihen'][bond]['laufzeit'])])
+            betrag = data['ags'][ag]['anleihen'][bond]['betrag']
+            zins = data['ags'][ag]['anleihen'][bond]['zins']
+            laufzeit = data['ags'][ag]['anleihen'][bond]['laufzeit']
+            
+            anleihen += betrag
+            
+            
+            zinsertrag = ((betrag*(1+zins/100)**laufzeit)-betrag)
+            erw_zinsertrag += zinsertrag
+            
+          }
+          console.log(anleihen)
+          console.log(erw_zinsertrag)
+
+          for (loan in data['ags'][ag]['kredite']){
+            betrag = data['ags'][ag]['kredite'][loan]['betrag']
+            zins = data['ags'][ag]['kredite'][loan]['zins']
+            laufzeit = data['ags'][ag]['kredite'][loan]['laufzeit']
+            
+            kredite += betrag
+            
+            erw_zinsaufwand += ((betrag*(1+zins/100)**laufzeit)-betrag)
+            
+          }
+          console.log(kredite)
+          console.log(erw_zinsaufwand)
+
+
+        }
+        document.getElementById("summe_bargeld").innerHTML = "Bargeldbestände:" + bargeld.toLocaleString('de');
+        document.getElementById("summe_anleihen").innerHTML = "Gehaltene Anleihen:" + anleihen.toLocaleString('de');
+        document.getElementById("summe_zinsertrag").innerHTML = "erw. Zinseinkünfte:" + erw_zinsertrag.toLocaleString('de');
+        document.getElementById("summe_kredite").innerHTML = "Fremdkapitaleinsatz:" + kredite.toLocaleString('de');
+        document.getElementById("summe_zinsaufwand").innerHTML = "Zinsaufwand:" + erw_zinsaufwand.toLocaleString('de');
+        document.getElementById("summe_marktkapitalisierung").innerHTML = "Marktkapitalisierung:" + marktkapitalisierung.toLocaleString('de');
+
       }
     };
     // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
