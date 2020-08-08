@@ -1,19 +1,69 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 5px;
+      }
+      th {
+        text-align: left;
+      }
+      td {
+        text-align: right;
+      }
+      </style>
+  </head>
 <body>
 
 <h2>AG-Spiel Ad-hoc Analytics</h2>
 
 <p id="info">aktualisiere...</p>
-<p id="count_ags"></p>
-<p id="count_orders"></p>
-<p id="count_volumen"></p>
-<p id="summe_bargeld"></p>
-<p id="summe_anleihen"></p>
-<p id="summe_zinsertrag"></p>
-<p id="summe_kredite"></p>
-<p id="summe_zinsaufwand"></p>
-<p id="summe_marktkapitalisierung"></p>
+<table>
+  <tr>
+    <th>Kennzahl</th>
+    <th text->Wert</th>
+  </tr>
+  <tr>
+    <td>AGs</td>
+    <td id="count_ags">...</td>
+  </tr>
+  <tr>
+    <td>Anzahl Orders in den letzten 24 Stunden</td>
+    <td id="count_orders">...</td>
+  </tr>
+  <tr>
+    <td>Ordervolumen in den letzten 24 Stunden</td>
+    <td id="count_volumen">...</td>
+  </tr>
+  <tr>
+    <td>Marktkapitalisierung</td>
+    <td id="summe_marktkapitalisierung">...</td>
+  </tr>
+  <tr>
+    <td>Bargeldbestände</td>
+    <td id="summe_bargeld">...</td>
+  </tr>
+  <tr>
+    <td>Gehaltende Anleihen</td>
+    <td id="summe_anleihen">...</td>
+  </tr>
+  <tr>
+    <td>Erwartete Zinserträge</td>
+    <td id="summe_zinsertrag">...</td>
+  </tr>
+  <tr>
+    <td>Fremdkapitaleinsatz</td>
+    <td id="summe_kredite">...</td>
+  </tr>
+  <tr>
+    <td>Fremdkapitalkosten</td>
+    <td id="summe_zinsaufwand">...</td>
+  </tr>
+</table>
 
 <script>
     var xmlhttp = new XMLHttpRequest();
@@ -22,9 +72,9 @@
       if (this.readyState == 4 && this.status == 200) {
         data = JSON.parse(this.responseText);
         document.getElementById("info").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
-        document.getElementById("count_ags").innerHTML = "Registrierte AGs: " + data.allgemein.ags;
-        document.getElementById("count_orders").innerHTML = "Orders letzte 24h:" + data.allgemein["24_stunden_orders"];
-        document.getElementById("count_volumen").innerHTML = "Ordervolumen letzte 24h:" + data.allgemein["24_stunden_ordervolumen"].toLocaleString('de');
+        document.getElementById("count_ags").innerHTML = data.allgemein.ags.toLocaleString('de');
+        document.getElementById("count_orders").innerHTML = data.allgemein["24_stunden_orders"].toLocaleString('de');
+        document.getElementById("count_volumen").innerHTML = data.allgemein["24_stunden_ordervolumen"].toLocaleString('de')+" €";
         var bargeld = 0;
         var marktkapitalisierung = 0;
         var anleihen = 0;
@@ -73,12 +123,12 @@
 
 
         }
-        document.getElementById("summe_bargeld").innerHTML = "Bargeldbestände:" + bargeld.toLocaleString('de');
-        document.getElementById("summe_anleihen").innerHTML = "Gehaltene Anleihen:" + anleihen.toLocaleString('de');
-        document.getElementById("summe_zinsertrag").innerHTML = "erw. Zinseinkünfte:" + erw_zinsertrag.toLocaleString('de');
-        document.getElementById("summe_kredite").innerHTML = "Fremdkapitaleinsatz:" + kredite.toLocaleString('de');
-        document.getElementById("summe_zinsaufwand").innerHTML = "Zinsaufwand:" + erw_zinsaufwand.toLocaleString('de');
-        document.getElementById("summe_marktkapitalisierung").innerHTML = "Marktkapitalisierung:" + marktkapitalisierung.toLocaleString('de');
+        document.getElementById("summe_bargeld").innerHTML = bargeld.toLocaleString('de')+" €";
+        document.getElementById("summe_anleihen").innerHTML = anleihen.toLocaleString('de')+",00 €";
+        document.getElementById("summe_zinsertrag").innerHTML = erw_zinsertrag.toLocaleString('de')+" €";
+        document.getElementById("summe_kredite").innerHTML = kredite.toLocaleString('de')+",00 €";
+        document.getElementById("summe_zinsaufwand").innerHTML = erw_zinsaufwand.toLocaleString('de')+" €";
+        document.getElementById("summe_marktkapitalisierung").innerHTML = marktkapitalisierung.toLocaleString('de')+" €";
 
       }
     };
