@@ -13,6 +13,7 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+
 ### v0.3 Anleihebuch der Systembank
 - veröffentlicht: 13.08.2020
 - Mitwirkende: SpekulantAC
