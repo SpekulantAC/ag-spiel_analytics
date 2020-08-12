@@ -13,6 +13,21 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+### v0.3 Anleihebuch der Systembank
+- veröffentlicht: 13.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Der Bericht *Anleihebuch der Systembank* zeigt die Bargeldzuflüsse aus dem Anleihegeschäft pro Tag. Dieser kann zur Schätzung der künftigen Zinsentwicklung herangezogen werden und gegenenfalls zur Optimierung von Investitionen in Anleihen (Timing) beitragen.  
+
+### v0.2 Total Market
+- veröffentlicht: 08.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Zusätzlich werden nun die Informationen zu den AGs aggregiert:
+ Marktbewertung (Anzahl Aktien\*Kurs),
+ Bargeldbestände,
+ Anleihen,
+ künfitge Zinserträge aus Anleihen,
+ Kredite,
+ Kreditkosten
 
 ### v0.1 Hello World
 - veröffentlicht: 06.08.2020

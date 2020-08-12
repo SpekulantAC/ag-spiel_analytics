@@ -65,6 +65,93 @@
   </tr>
 </table>
 
+<h2>Anleihebuch der Systembank</h2>
+<table>
+  <tr>
+    <th>Datum der Rückzahlung</th>
+    <th>Tilgung</th>
+    <th>Zinsen</th>
+    <th>Gesamt</th>
+  </tr>
+  <tr>
+    <td id="rep_001_0_d">...</td>
+    <td id="rep_001_0_t">...</td>
+    <td id="rep_001_0_z">...</td>
+    <td id="rep_001_0_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_1_d">...</td>
+    <td id="rep_001_1_t">...</td>
+    <td id="rep_001_1_z">...</td>
+    <td id="rep_001_1_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_2_d">...</td>
+    <td id="rep_001_2_t">...</td>
+    <td id="rep_001_2_z">...</td>
+    <td id="rep_001_2_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_3_d">...</td>
+    <td id="rep_001_3_t">...</td>
+    <td id="rep_001_3_z">...</td>
+    <td id="rep_001_3_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_4_d">...</td>
+    <td id="rep_001_4_t">...</td>
+    <td id="rep_001_4_z">...</td>
+    <td id="rep_001_4_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_5_d">...</td>
+    <td id="rep_001_5_t">...</td>
+    <td id="rep_001_5_z">...</td>
+    <td id="rep_001_5_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_6_d">...</td>
+    <td id="rep_001_6_t">...</td>
+    <td id="rep_001_6_z">...</td>
+    <td id="rep_001_6_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_7_d">...</td>
+    <td id="rep_001_7_t">...</td>
+    <td id="rep_001_7_z">...</td>
+    <td id="rep_001_7_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_8_d">...</td>
+    <td id="rep_001_8_t">...</td>
+    <td id="rep_001_8_z">...</td>
+    <td id="rep_001_8_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_9_d">...</td>
+    <td id="rep_001_9_t">...</td>
+    <td id="rep_001_9_z">...</td>
+    <td id="rep_001_9_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_10_d">...</td>
+    <td id="rep_001_10_t">...</td>
+    <td id="rep_001_10_z">...</td>
+    <td id="rep_001_10_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_11_d">...</td>
+    <td id="rep_001_11_t">...</td>
+    <td id="rep_001_11_z">...</td>
+    <td id="rep_001_11_g">...</td>
+  </tr>
+  <tr>
+    <td id="rep_001_12_d">...</td>
+    <td id="rep_001_12_t">...</td>
+    <td id="rep_001_12_z">...</td>
+    <td id="rep_001_12_g">...</td>
+  </tr>
+</table>
 <script>
     var xmlhttp = new XMLHttpRequest();
     
@@ -84,29 +171,30 @@
         var ag;
         var bond;
         var loan;
+        var anleihe_buch = {};
         for (ag in data.ags){
-          console.log("wkn "+ag)
+          //console.log("wkn "+ag)
           marktkapitalisierung += data['ags'][ag]['aktienanzahl']*data['ags'][ag]['kurs']
-          console.log(marktkapitalisierung)
+          //console.log(marktkapitalisierung)
           bargeld += data['ags'][ag]['bargeld']
-          console.log(bargeld)
-          console.log(data['ags'][ag]['anleihen'])
+          //console.log(bargeld)
+          //console.log(data['ags'][ag]['anleihen'])
 
           for (bond in data['ags'][ag]['anleihen']){
-            //console.log([bond,isNaN(data['ags'][ag]['anleihen'][bond]['betrag']),isNaN(data['ags'][ag]['anleihen'][bond]['zins']),isNaN(data['ags'][ag]['anleihen'][bond]['laufzeit'])])
+            ////console.log([bond,isNaN(data['ags'][ag]['anleihen'][bond]['betrag']),isNaN(data['ags'][ag]['anleihen'][bond]['zins']),isNaN(data['ags'][ag]['anleihen'][bond]['laufzeit'])])
             betrag = data['ags'][ag]['anleihen'][bond]['betrag']
             zins = data['ags'][ag]['anleihen'][bond]['zins']
             laufzeit = data['ags'][ag]['anleihen'][bond]['laufzeit']
             
             anleihen += betrag
-            
+            anleihe_buch[ag+"_"+bond] = data['ags'][ag]['anleihen'][bond]
             
             zinsertrag = ((betrag*(1+zins/100)**laufzeit)-betrag)
             erw_zinsertrag += zinsertrag
             
           }
-          console.log(anleihen)
-          console.log(erw_zinsertrag)
+          //console.log(anleihen)
+          //console.log(erw_zinsertrag)
 
           for (loan in data['ags'][ag]['kredite']){
             betrag = data['ags'][ag]['kredite'][loan]['betrag']
@@ -118,18 +206,59 @@
             erw_zinsaufwand += ((betrag*(1+zins/100)**laufzeit)-betrag)
             
           }
-          console.log(kredite)
-          console.log(erw_zinsaufwand)
+          //console.log(kredite)
+          //console.log(erw_zinsaufwand)
 
 
         }
+        //console.log(anleihe_buch)
         document.getElementById("summe_bargeld").innerHTML = bargeld.toLocaleString('de')+" €";
         document.getElementById("summe_anleihen").innerHTML = anleihen.toLocaleString('de')+",00 €";
         document.getElementById("summe_zinsertrag").innerHTML = erw_zinsertrag.toLocaleString('de')+" €";
         document.getElementById("summe_kredite").innerHTML = kredite.toLocaleString('de')+",00 €";
         document.getElementById("summe_zinsaufwand").innerHTML = erw_zinsaufwand.toLocaleString('de')+" €";
         document.getElementById("summe_marktkapitalisierung").innerHTML = marktkapitalisierung.toLocaleString('de')+" €";
+        var anleihe_report = {};
+        var dates = [];
+        var datum;
+        for (bond in anleihe_buch){
+          //console.log("cycle "+bond )
+          datum = anleihe_buch[bond]['auszahlung_datum'].substring(0,10)
 
+          betrag = anleihe_buch[bond]['betrag']
+          zins = anleihe_buch[bond]['zins']
+          laufzeit = anleihe_buch[bond]['laufzeit']
+          zinsertrag = ((betrag*(1+zins/100)**laufzeit)-betrag)
+          //console.log(datum)
+          //console.log(betrag)
+          //console.log(zinsertrag)
+          //console.log(dates)
+          if (dates.indexOf(datum) == -1){
+            dates.push(datum)
+            anleihe_report[datum] = [betrag, zinsertrag, betrag + zinsertrag]
+          }
+          else{
+            //anleihe_report[datum] += [betrag, zinsertrag, betrag + zinsertrag]
+            anleihe_report[datum] = anleihe_report[datum].map(function (num, idx) {
+              return num + [betrag, zinsertrag, betrag + zinsertrag][idx]; 
+            })
+          }
+                 
+        }
+        //console.log(anleihe_report) 
+        for (date in dates.sort()){
+          //console.log(date, dates[date],anleihe_report[dates[date]])
+          document.getElementById("rep_001_"+date+"_d").innerHTML = dates[date]
+          document.getElementById("rep_001_"+date+"_t").innerHTML = anleihe_report[dates[date]][0].toLocaleString('de')+" €";
+          document.getElementById("rep_001_"+date+"_z").innerHTML = anleihe_report[dates[date]][1].toLocaleString('de')+" €";
+          document.getElementById("rep_001_"+date+"_g").innerHTML = anleihe_report[dates[date]][2].toLocaleString('de')+" €";
+          //console.log(dates[date])
+          //console.log(anleihe_report[dates[date]])
+        }
+        document.getElementById("rep_001_12_d").innerHTML = "Total"
+        document.getElementById("rep_001_12_t").innerHTML = anleihen.toLocaleString('de')+" €";
+        document.getElementById("rep_001_12_z").innerHTML = erw_zinsertrag.toLocaleString('de')+" €";
+        document.getElementById("rep_001_12_g").innerHTML = (anleihen + erw_zinsertrag).toLocaleString('de')+" €";
       }
     };
     // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
