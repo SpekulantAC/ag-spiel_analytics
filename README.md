@@ -13,6 +13,10 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+### v0.4 Top 20 AGs mit geringsten Spreads
+- veröffentlicht: 13.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Der Bericht *TOP 20 AGs with lowest Spreads* zeigt die 20 AGs mit dem aktuell geringsten Spreads zwischen Brief- und Geldkurs. Geringe Spreads sprechen für vergleichsweise hohes Vertrauen des Marktes in diese AGs. Möglicherweise ein Qualitätsmerkmal?   
 
 ### v0.3 Anleihebuch der Systembank
 - veröffentlicht: 13.08.2020

@@ -66,6 +66,7 @@
 </table>
 
 <h2>Anleihebuch der Systembank</h2>
+<p id="info001">aktualisiere...</p>
 <table>
   <tr>
     <th>Datum der Rückzahlung</th>
@@ -152,13 +153,19 @@
     <td id="rep_001_12_g">...</td>
   </tr>
 </table>
+
+<h2>TOP 20 AGs with lowest Spreads</h2>
+<p id="info002">aktualisiere...</p>
+<p id="rep_002_low_spreads"></p>
 <script>
     var xmlhttp = new XMLHttpRequest();
-    
+    var data;
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         data = JSON.parse(this.responseText);
         document.getElementById("info").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
+        document.getElementById("info001").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
+        document.getElementById("info002").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
         document.getElementById("count_ags").innerHTML = data.allgemein.ags.toLocaleString('de');
         document.getElementById("count_orders").innerHTML = data.allgemein["24_stunden_orders"].toLocaleString('de');
         document.getElementById("count_volumen").innerHTML = data.allgemein["24_stunden_ordervolumen"].toLocaleString('de')+" €";
@@ -172,6 +179,9 @@
         var bond;
         var loan;
         var anleihe_buch = {};
+        var briefkurs;
+        var geldkurs;
+        var spreads = [];
         for (ag in data.ags){
           //console.log("wkn "+ag)
           marktkapitalisierung += data['ags'][ag]['aktienanzahl']*data['ags'][ag]['kurs']
@@ -179,6 +189,13 @@
           bargeld += data['ags'][ag]['bargeld']
           //console.log(bargeld)
           //console.log(data['ags'][ag]['anleihen'])
+          briefkurs = data['ags'][ag]['brief']
+          geldkurs = data['ags'][ag]['geld']
+          userprojekt = data['ags'][ag]['ceo']['ist_userprojekt_account']
+          if (briefkurs != 0 && geldkurs != 0 && ! userprojekt){
+            spreads.push([ag,data['ags'][ag]['name'],((briefkurs - geldkurs)*100/geldkurs).toFixed(5)]) 
+          }
+
 
           for (bond in data['ags'][ag]['anleihen']){
             ////console.log([bond,isNaN(data['ags'][ag]['anleihen'][bond]['betrag']),isNaN(data['ags'][ag]['anleihen'][bond]['zins']),isNaN(data['ags'][ag]['anleihen'][bond]['laufzeit'])])
@@ -259,6 +276,16 @@
         document.getElementById("rep_001_12_t").innerHTML = anleihen.toLocaleString('de')+" €";
         document.getElementById("rep_001_12_z").innerHTML = erw_zinsertrag.toLocaleString('de')+" €";
         document.getElementById("rep_001_12_g").innerHTML = (anleihen + erw_zinsertrag).toLocaleString('de')+" €";
+        //report Top 20 low spread
+        spreads.sort(function(a, b){return a[2] - b[2]})
+        var text = "<table>";
+        text += "<tr><th>WKN</th><th>Name</th><th>Spread in %</th></tr>"
+          for (i = 0; i < 20; i++) {
+            text += "<tr><td>" + spreads[i][0] + "</td><td>" + spreads[i][1] + "</td><td> " + spreads[i][2] + "</td></tr>";
+          }
+          text += "</table>";
+          
+          document.getElementById("rep_002_low_spreads").innerHTML = text
       }
     };
     // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
