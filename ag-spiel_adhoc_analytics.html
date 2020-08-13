@@ -278,11 +278,16 @@
         document.getElementById("rep_001_12_g").innerHTML = (anleihen + erw_zinsertrag).toLocaleString('de')+" €";
         //report Top 20 low spread
         spreads.sort(function(a, b){return a[2] - b[2]})
+        var tmp_link;
         var text = "<table>";
+
         text += "<tr><th>WKN</th><th>Name</th><th>Spread in %</th></tr>"
           for (i = 0; i < 20; i++) {
-            text += "<tr><td>" + spreads[i][0] + "</td><td>" + spreads[i][1] + "</td><td> " + spreads[i][2] + "</td></tr>";
+            tmp_link = "https://www.ag-spiel.de/index.php?section=profil&aktie="+ spreads[i][0];
+            text += "<tr><td> <a href="+tmp_link + "target='_blank'>"+spreads[i][0]+"</a></td><td> <a href="+tmp_link + "target='_blank'>"+spreads[i][1]+"</a></td><td> " + spreads[i][2] + "</td></tr>";
           }
+          
+          https://www.ag-spiel.de/index.php?section=profil&aktie=
           text += "</table>";
           
           document.getElementById("rep_002_low_spreads").innerHTML = text
