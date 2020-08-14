@@ -13,6 +13,11 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+### v0.5 Code refactoring
+- veröffentlicht: 14.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Inhaltlich keine Änderungen. CSS für Formatierung im Head ergänzt. Berichte in eigene Funktionen gekapselt für bessere Wartbarkeit. Format der Beträge in € vereinheitlicht.
+
 ### v0.4 Top 20 AGs mit geringsten Spreads
 - veröffentlicht: 13.08.2020
 - Mitwirkende: SpekulantAC
