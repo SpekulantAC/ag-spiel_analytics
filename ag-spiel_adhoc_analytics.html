@@ -45,6 +45,9 @@
       <h2>TOP 20 AGs with lowest Spreads</h2>
       <p id="info002">aktualisiere...</p>
       <p id="rep_002_low_spreads"></p>
+      <h2>TOP 10 AGs with lowest Price relative to Cash/Bond positon</h2>
+      <p id="info003">aktualisiere...</p>
+      <p id="rep_003_low_valuation"></p>
       <script>
          function currencyFormatDE(num) {
          return (
@@ -205,7 +208,106 @@
                  document.getElementById("info002").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
                  document.getElementById("rep_002_low_spreads").innerHTML = text
          };
+         function report003_low_valuation(data){
+
+          var txt_rep003;
+          //calcultate some figures
+          var bargeld = 0;
+           var marktkapitalisierung = 0;
+           var anleihen = 0;
+           var erw_zinsertrag = 0;
+           var kredite = 0;
+           var erw_zinsaufwand = 0;
+           var ag;
+           var bond;
+           var loan;
+           var ag_value_list = [];
+           for (ag in data.ags){
+                 //console.log("wkn "+ag)
+                 marktkapitalisierung = data['ags'][ag]['aktienanzahl']*data['ags'][ag]['kurs']
+                 //console.log(marktkapitalisierung)
+                 bargeld = data['ags'][ag]['bargeld'];
+                 anleihen = 0;
+                 erw_zinsertrag = 0;
+                 kredite = 0;
+                 erw_zinsaufwand = 0;
+                 for (bond in data['ags'][ag]['anleihen']){
+                   ////console.log([bond,isNaN(data['ags'][ag]['anleihen'][bond]['betrag']),isNaN(data['ags'][ag]['anleihen'][bond]['zins']),isNaN(data['ags'][ag]['anleihen'][bond]['laufzeit'])])
+                   betrag = data['ags'][ag]['anleihen'][bond]['betrag']
+                   zins = data['ags'][ag]['anleihen'][bond]['zins']
+                   laufzeit = data['ags'][ag]['anleihen'][bond]['laufzeit']
+                   
+                   anleihen += betrag
+         //            anleihe_buch[ag+"_"+bond] = data['ags'][ag]['anleihen'][bond]
+                   
+                   zinsertrag = ((betrag*(1+zins/100)**laufzeit)-betrag)
+                   erw_zinsertrag += zinsertrag
+                   
+                 }
+                 //console.log(anleihen)
+                 //console.log(erw_zinsertrag)
          
+                 for (loan in data['ags'][ag]['kredite']){
+                   betrag = data['ags'][ag]['kredite'][loan]['betrag']
+                   zins = data['ags'][ag]['kredite'][loan]['zins']
+                   laufzeit = data['ags'][ag]['kredite'][loan]['laufzeit']
+                   
+                   kredite += betrag
+                   
+                   erw_zinsaufwand += ((betrag*(1+zins/100)**laufzeit)-betrag)
+                   
+                 }
+                 if (! data['ags'][ag]['ceo']['ist_userprojekt_account'] && ! data['ags'][ag]['in_liquidation']){
+                  ag_value_list.push([ag, 
+                    data['ags'][ag]['name'], 
+                    data['ags'][ag]['kurs'],
+                    marktkapitalisierung, 
+                    bargeld, 
+                    anleihen,
+                    erw_zinsertrag,
+                    kredite,
+                    erw_zinsaufwand,
+                    (marktkapitalisierung-(bargeld + anleihen+erw_zinsertrag - kredite - erw_zinsaufwand))/marktkapitalisierung]);
+                 }
+           };
+           ag_value_list.sort(function(a, b){return a[9] - b[9]})
+               var tmp_link;
+               var txt_rep003 = "<table>";
+         
+                txt_rep003 += "<tr>"
+                txt_rep003 += "<th>Platz</th>"
+                txt_rep003 += "<th>WKN</th>"
+                txt_rep003 += "<th>Name</th>"
+                txt_rep003 += "<th>letzter Kurs</th>"
+                txt_rep003 += "<th>Marktkapitalisierung</th>"
+                txt_rep003 += "<th>Bargeldbestand</th>"
+                txt_rep003 += "<th>Anleihen</th>"
+                txt_rep003 += "<th>erw. Erträge aus Anleihen</th>"
+                txt_rep003 += "<th>Fremdkapital</th>"
+                txt_rep003 += "<th>Fremdkapitalkosten</th>"
+                txt_rep003 += "<th>Bewertung soft Assets</th>"
+                txt_rep003 += "</tr>"
+                 for (i = 0; i < 20; i++) {
+                   tmp_link = "https://www.ag-spiel.de/index.php?section=profil&aktie="+ ag_value_list[i][0];
+                   txt_rep003 += "<tr><td>"+ (i+1) +
+                    "</td><td> <a href="+tmp_link + "target='_blank'>"+ag_value_list[i][0]
+                    +"</a></td><td> <a href="+tmp_link + "target='_blank'>"+ag_value_list[i][1]
+                    +"</a></td><td> " + currencyFormatDE(ag_value_list[i][2]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][3]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][4]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][5]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][6]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][7]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][8]) + "</td>"
+                    +"<td> " + ag_value_list[i][9].toFixed(5) + "</td>"
+                    + "</tr>";
+                 }
+                 txt_rep003 += "</table>";
+
+          document.getElementById("info003").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
+          document.getElementById("rep_003_low_valuation").innerHTML = txt_rep003
+          
+         };
          var xmlhttp = new XMLHttpRequest();
            var data;
            xmlhttp.onreadystatechange = function() {
@@ -214,7 +316,8 @@
                //return data;
                report000_markt(data);
                report001_anleihebuch(data);
-               report002_low_spreads(data)
+               report002_low_spreads(data);
+               report003_low_valuation(data);
              }
            };
            // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
