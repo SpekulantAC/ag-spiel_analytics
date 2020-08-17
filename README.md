@@ -13,6 +13,17 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+### v0.7 Top 10 AGs high Valuation + Liabilities Maturity Report
+- veröffentlicht: 17.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Im neuen high Valuation Bericht sind die 10 AGs aufgeführt, bei denen das Verhältnis von Marktkapitalisierung ohne cash/bonds/loans zu Marktkapitalisierunga am höchsten ist. Hierbei wird auch der Zinsertrag/Zinsaufwand miteingerechnet. Ist die Ratio >1, so wird helfig Fremdkapital eingesetzt.
+Der Liability-Report zeigt die Fälligkeiten des Fremdkapitals an, also an welchen Tagen dem Markt durch Rückzahlung von Kapital und Zinsen Bargeld entzogen wird.
+
+### v0.6 Top 10 AGs low Valuation
+- veröffentlicht: 15.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Im neuen Bericht sind die 10 AGs aufgeführt, bei denen das Verhältnis von Marktkapitalisierung net cash/bonds/loans zu Marktkapitalisierunga am gerinsten ist. Hierbei wird auch der Zinsertrag/Zinsaufwand miteingerechnet. Ist der Ratio <0, so lag der letzte Kurs unterhalb der "sicheren" Inneren Wertes. ACHTUNG: Keine blende Kaufentscheidung treffe, meist liegt der Briefkurs deutlich uber dem d KAUFEMPFEHLUNG
+
 ### v0.5 Code refactoring
 - veröffentlicht: 14.08.2020
 - Mitwirkende: SpekulantAC
