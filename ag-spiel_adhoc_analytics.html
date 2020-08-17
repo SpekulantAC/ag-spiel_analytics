@@ -48,6 +48,9 @@
       <h2>TOP 10 AGs with lowest Price relative to Cash/Bond positon</h2>
       <p id="info003">aktualisiere...</p>
       <p id="rep_003_low_valuation"></p>
+      <h2>Fremdkapitalfälligkeiten</h2>
+      <p id="info004">aktualisiere...</p>
+      <p id="rep_004_liabilities"></p>
       <script>
          function currencyFormatDE(num) {
          return (
@@ -304,9 +307,106 @@
                  }
                  txt_rep003 += "</table>";
 
+                 ag_value_list.sort(function(a, b){return b[9] - a[9]})
+                txt_rep003 += "<h2>Top 10 (extrem) high valuation</h2>";
+                txt_rep003 += "<p>Zuletzt aktualisiert: " + data.daten_datum +"</p>";
+                txt_rep003 += "<table>";
+         
+                txt_rep003 += "<tr>"
+                txt_rep003 += "<th>Platz</th>"
+                txt_rep003 += "<th>WKN</th>"
+                txt_rep003 += "<th>Name</th>"
+                txt_rep003 += "<th>letzter Kurs</th>"
+                txt_rep003 += "<th>Marktkapitalisierung</th>"
+                txt_rep003 += "<th>Bargeldbestand</th>"
+                txt_rep003 += "<th>Anleihen</th>"
+                txt_rep003 += "<th>erw. Erträge aus Anleihen</th>"
+                txt_rep003 += "<th>Fremdkapital</th>"
+                txt_rep003 += "<th>Fremdkapitalkosten</th>"
+                txt_rep003 += "<th>Bewertung soft Assets</th>"
+                txt_rep003 += "</tr>"
+                 for (i = 0; i < 20; i++) {
+                   tmp_link = "https://www.ag-spiel.de/index.php?section=profil&aktie="+ ag_value_list[i][0];
+                   txt_rep003 += "<tr><td>"+ (i+1) +
+                    "</td><td> <a href="+tmp_link + "target='_blank'>"+ag_value_list[i][0]
+                    +"</a></td><td> <a href="+tmp_link + "target='_blank'>"+ag_value_list[i][1]
+                    +"</a></td><td> " + currencyFormatDE(ag_value_list[i][2]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][3]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][4]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][5]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][6]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][7]) + "</td>"
+                    +"<td> " + currencyFormatDE(ag_value_list[i][8]) + "</td>"
+                    +"<td> " + ag_value_list[i][9].toFixed(5) + "</td>"
+                    + "</tr>";
+                 }
+                 txt_rep003 += "</table>";
+
+
           document.getElementById("info003").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
           document.getElementById("rep_003_low_valuation").innerHTML = txt_rep003
           
+         };
+
+         function report004_kreditbuch(data){
+           var kredite = 0;
+           var zinsen = 0;
+           var erw_zinsaufwand = 0;
+           var ag;
+           var loan;
+           var kredit_buch = {};
+           var kredit_report = {};
+           var dates = [];
+           var datum;
+           for (ag in data.ags){
+             
+             for (loan in data['ags'][ag]['kredite']){
+              kredit_buch[ag+"_"+loan] = data['ags'][ag]['kredite'][loan]  
+             }
+           }
+           for (loan in kredit_buch){
+             //console.log("cycle "+loan )
+             datum = kredit_buch[loan]['rueckzahlung_datum'].substring(0,10)
+         
+             betrag = kredit_buch[loan]['betrag']
+             zins = kredit_buch[loan]['zins']
+             laufzeit = kredit_buch[loan]['laufzeit']
+             zinsen = ((betrag*(1+zins/100)**laufzeit)-betrag)
+             kredite += betrag
+             erw_zinsaufwand += zinsen
+             if (dates.indexOf(datum) == -1){
+               dates.push(datum)
+               kredit_report[datum] = [betrag, zinsen, betrag + zinsen]
+             }
+             else{
+               //kredit_report[datum] += [betrag, zinsen, betrag + zinsen]
+               kredit_report[datum] = kredit_report[datum].map(function (num, idx) {
+                 return num + [betrag, zinsen, betrag + zinsen][idx]; 
+               })
+             }
+                     
+           }
+           //console.log(kredit_report)
+           var txt_rep004;
+           txt_rep004 = "<table>"
+            txt_rep004 += "<tr><th>Datum der Rückzahlung</th><th>Tilgung</th><th>Zinsen</th><th>Gesamt</th></tr>" 
+           for (date in dates.sort()){
+             //console.log(date, dates[date],kredit_report[dates[date]])
+             txt_rep004 += "<tr><td>"+dates[date]+"</td><td>"+
+               currencyFormatDE(kredit_report[dates[date]][0]) + "</td><td>" +
+               currencyFormatDE(kredit_report[dates[date]][1]) + "</td><td>" +
+               currencyFormatDE(kredit_report[dates[date]][2]) + "</td></tr>"
+             //console.log(dates[date])
+             //console.log(kredit_report[dates[date]])
+           }
+           txt_rep004 += "<tr><th>Total</th><th>" +
+             currencyFormatDE(kredite) + "</th><th>" +
+             currencyFormatDE(erw_zinsaufwand) + "</th><th>" +
+             currencyFormatDE(kredite + erw_zinsaufwand) + "</th></tr></table>"
+             
+           document.getElementById("info004").innerHTML = "Zuletzt aktualisiert: " + data.daten_datum;
+           document.getElementById("rep_004_liabilities").innerHTML = txt_rep004
+         
          };
          var xmlhttp = new XMLHttpRequest();
            var data;
@@ -318,6 +418,7 @@
                report001_anleihebuch(data);
                report002_low_spreads(data);
                report003_low_valuation(data);
+               report004_kreditbuch(data);
              }
            };
            // FIXME request to Rady to include "Access-Control-Allow-Origin: *" in the response header
