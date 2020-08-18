@@ -13,6 +13,12 @@ Bitte lasst mich eure Wünsche wissen, welche Daten wollt ihr sehen, kombinieren
 Macht bitte einfach einen Issue hier in github auf (https://github.com/SpekulantAC/ag-spiel_analytics/issues)
 
 ## Change Log
+### v0.8 Aktiendepot der Systembank
+- veröffentlicht: 19.08.2020
+- Mitwirkende: SpekulantAC
+- Änderungen: Der Report *Aktiendepot der Systembank* hält was er verspricht, er gewährt Einblick an welchen AGs die Systembank beteiligt ist und wie hoch der Anteil am Kapital der jeweiligen AG ist. Wenig überraschend ist die (fast) vollständige Kontrolle der Userprojekt-AGs. 
+
+
 ### v0.7 Top 10 AGs high Valuation + Liabilities Maturity Report
 - veröffentlicht: 17.08.2020
 - Mitwirkende: SpekulantAC
