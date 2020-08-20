@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
+    <meta charset="utf-8">
       <style>
          #customers {
          font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -35,6 +36,7 @@
       </style>
    </head>
    <body>
+    <a target='_blank' href='https://www.ag-spiel.de/?bonus=84061'><img src='https://www.ag-spiel.de/images/logo.gif'></a>
       <h1>AG-Spiel Ad-hoc Analytics</h1>
 
       <h2>Marktüberblick</h2>
@@ -61,6 +63,8 @@
       <p id="info003">aktualisiere...</p>
       <p id="rep_003_low_valuation"></p>
       
+
+      <a target='_blank' href='https://www.ag-spiel.de/?bonus=84061'><img src='https://www.ag-spiel.de/signature.php?id=84061'></a>
       <script>
          function currencyFormatDE(num) {
          return (
@@ -442,6 +446,8 @@
               aktien_depot[ag] = {"anzahl":data["ags"][ag]["aktienanzahl"],
                 "kurs":data["ags"][ag]["kurs"],
                 "name":data["ags"][ag]["name"],
+                "birthday":data["ags"][ag]["gruendung"],
+                "userproject":data["ags"][ag]["ceo"]["ist_userprojekt_account"],
                 "cnt_gehalten_durch_ags":0}
             }
             else{
@@ -449,6 +455,8 @@
               aktien_depot[ag]["anzahl"] = data["ags"][ag]["aktienanzahl"];
               aktien_depot[ag]["kurs"] = data["ags"][ag]["kurs"];
               aktien_depot[ag]["name"] = data["ags"][ag]["name"];
+              aktien_depot[ag]["birthday"] = data["ags"][ag]["gruendung"];
+              aktien_depot[ag]["userproject"] = data["ags"][ag]["ceo"]["ist_userprojekt_account"];
             }
 
             aktien = data["ags"][ag]["aktien"];
@@ -463,6 +471,8 @@
                aktien_depot[aktien[wkn]["wkn"]] = {"anzahl":data["ags"][aktien[wkn]["wkn"]]["aktienanzahl"],
                 "kurs":data["ags"][aktien[wkn]["wkn"]]["kurs"],
                 "name":data["ags"][aktien[wkn]["wkn"]]["name"],
+                "birthday":data["ags"][ag]["gruendung"],
+                "userproject":data["ags"][ag]["ceo"]["ist_userprojekt_account"],
                 "cnt_gehalten_durch_ags":aktien[wkn]["stueckzahl"]}
                
              }
@@ -479,17 +489,21 @@
            var sum_aktien = 0;
            var sum_wert = 0;
            var wert = 0;
+           var tmp_link;
            var txt_rep005;
            txt_rep005 = "<table>"
-           txt_rep005 += "<tr><th>WKN</th><th>Name</th><th>Anzahl Aktien</th><th>Wert</th><th>Anteil</th></tr>" 
+           txt_rep005 += "<tr><th>WKN</th><th>Name</th><th>Gründung</th><th>Userprojekt</th><th>Anzahl Aktien</th><th>Wert</th><th>Anteil</th></tr>" 
            for (wkn in ag_liste.sort()){
               wert = (aktien_depot[ag_liste[wkn]]["anzahl"] - aktien_depot[ag_liste[wkn]]["cnt_gehalten_durch_ags"])*aktien_depot[ag_liste[wkn]]["kurs"];
               sum_aktien += aktien_depot[ag_liste[wkn]]["anzahl"] - aktien_depot[ag_liste[wkn]]["cnt_gehalten_durch_ags"];
               sum_wert += wert;
              //console.log(date, dates[date],kredit_report[dates[date]])
              if (aktien_depot[ag_liste[wkn]]["anzahl"] != aktien_depot[ag_liste[wkn]]["cnt_gehalten_durch_ags"]){
-             txt_rep005 += "<tr><td>"+ag_liste[wkn]+"</td><td>"+
-               aktien_depot[ag_liste[wkn]]["name"] + "</td><td>" +
+              tmp_link = "https://www.ag-spiel.de/index.php?section=profil&aktie="+ ag_liste[wkn];
+             txt_rep005 += "<tr><td><a href="+tmp_link + "target='_blank'>"+ag_liste[wkn]+"</a></td><td><a href="+tmp_link + "target='_blank'>"+
+               aktien_depot[ag_liste[wkn]]["name"] + "</a></td><td>" +
+                aktien_depot[ag_liste[wkn]]["birthday"] + "</td><td>" +
+                  aktien_depot[ag_liste[wkn]]["userproject"]+ "</td><td>" +
                 (aktien_depot[ag_liste[wkn]]["anzahl"] - aktien_depot[ag_liste[wkn]]["cnt_gehalten_durch_ags"]).toLocaleString("de") + "</td><td>" +
                currencyFormatDE(wert) + "</td><td>" +
                 ((aktien_depot[ag_liste[wkn]]["anzahl"] - aktien_depot[ag_liste[wkn]]["cnt_gehalten_durch_ags"])/aktien_depot[ag_liste[wkn]]["anzahl"]*100).toFixed(2)+" %</td></tr>"
@@ -498,7 +512,7 @@
              //console.log(kredit_report[dates[date]])
            }
            txt_rep005 += "<tr><th>Total</th><th>" +
-             "" + "</th><th>" +
+             "" + "</th><th>" + "</th><th>" + "</th><th>" +
              sum_aktien.toLocaleString("de") + "</th><th>" +
              currencyFormatDE(sum_wert) + "</th><th></th></tr></table>"
              
@@ -510,8 +524,8 @@
            var data;
            xmlhttp.onreadystatechange = function() {
              if (this.readyState == 4 && this.status == 200) {
-               data = JSON.parse(this.responseText);
-               //return data;
+               var data = JSON.parse(this.responseText);
+           
                report000_markt(data);
                report001_anleihebuch(data);
                report002_low_spreads(data);
@@ -524,6 +538,7 @@
            xmlhttp.open("GET", "https://cors-anywhere.herokuapp.com/https://www.ag-spiel.de/api/get/data.php", true);
            xmlhttp.send();
            
+            
            
       </script>
    </body>
