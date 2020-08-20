@@ -1,8 +1,31 @@
 <!DOCTYPE html>
 <html>
    <head>
+     <title>AG-Spiel Reports</title>
     <meta charset="utf-8">
       <style>
+        .collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #FFFFFF;
+}
          #customers {
          font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
          border-collapse: collapse;
@@ -34,37 +57,65 @@
          font-size: 20px;
          }
       </style>
+      
+        
    </head>
    <body>
     <a target='_blank' href='https://www.ag-spiel.de/?bonus=84061'><img src='https://www.ag-spiel.de/images/logo.gif'></a>
-      <h1>AG-Spiel Ad-hoc Analytics</h1>
-
-      <h2>Marktüberblick</h2>
-      <p id="info000">aktualisiere...</p>
-      <p id="rep_000_markt"></p>
-
-      <h2>Anleihebuch der Systembank</h2>
-      <p id="info001">aktualisiere...</p>
-      <p id="rep_001_anleihebuch"></p>
-
-      <h2>Fremdkapitalfälligkeiten</h2>
-      <p id="info004">aktualisiere...</p>
-      <p id="rep_004_liabilities"></p>
-
-      <h2>Depot Systembank</h2>
-      <p id="info005">aktualisiere...</p>
-      <p id="rep_005_depot_systembank"></p>
-
-      <h2>TOP 20 AGs with lowest spreads</h2>
-      <p id="info002">aktualisiere...</p>
-      <p id="rep_002_low_spreads"></p>
-
-      <h2>TOP 10 AGs with lowest/highest valuation relative to cash/bond positon</h2>
-      <p id="info003">aktualisiere...</p>
-      <p id="rep_003_low_valuation"></p>
+      <h1>AG-Spiel Ad-hoc Reports</h1>
+      <button type="button" class="collapsible">Marktüberblick</button>
+      <div class="content">
+        <p id="info000">aktualisiere...</p>
+        <p id="rep_000_markt"></p>
+      </div>
       
+      <button type="button" class="collapsible">Anleihebuch der Systembank</button>
+      <div class="content">
+        <p id="info001">aktualisiere...</p>
+        <p id="rep_001_anleihebuch"></p>
+      </div>
 
-      <a target='_blank' href='https://www.ag-spiel.de/?bonus=84061'><img src='https://www.ag-spiel.de/signature.php?id=84061'></a>
+      <button type="button" class="collapsible">Fremdkapitalfälligkeiten</button>
+      <div class="content">
+        <p id="info004">aktualisiere...</p>
+        <p id="rep_004_liabilities"></p>
+      </div>
+      
+      <button type="button" class="collapsible">Depot Systembank</button>
+      <div class="content">
+        <p id="info005">aktualisiere...</p>
+        <p id="rep_005_depot_systembank"></p>
+      </div>
+
+      <button type="button" class="collapsible">TOP 20 AGs with lowest spreads</button>
+      <div class="content">
+        <p id="info002">aktualisiere...</p>
+        <p id="rep_002_low_spreads"></p>
+      </div>
+
+      <button type="button" class="collapsible">TOP 10 AGs with lowest/highest valuation relative to cash/bond positon</button>
+      <div class="content">
+        <p id="info003">aktualisiere...</p>
+        <p id="rep_003_low_valuation"></p>
+      </div>
+
+      <p><a target='_blank' href='https://www.ag-spiel.de/?bonus=84061'><img src='https://www.ag-spiel.de/signature.php?id=84061'></a></p>
+      <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+        </script>
       <script>
          function currencyFormatDE(num) {
          return (
